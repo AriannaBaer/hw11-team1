@@ -158,7 +158,11 @@ public class ArtifactFactory {
     }
 
     public Artifact createRandomDie() {
-        int numSides = random.nextInt(10) + 1;
+        // 2 to 10 sides. A 1-sided die always rolls a 1, which is a fixed die wearing a random
+        // die's name, and takingArtifacts.feature asserts that a die picked up out of the maze
+        // actually varies when you roll it. nextInt(10) + 1 handed back a 1-sided die one time in
+        // ten, so that scenario failed about 10% of runs for no reason the game could control.
+        int numSides = random.nextInt(9) + 2;
         return createRandomDie(numSides);
     }
 

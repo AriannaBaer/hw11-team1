@@ -21,7 +21,7 @@ public class ReincarnatableCharacter extends DecoratedCharacter {
     }
 
     @Override
-    protected void loseHealth(double healthToLose) {
+    public void loseHealth(double healthToLose) {
         super.loseHealth(healthToLose);
         if (!isAlive()) {
             // If I died, I'll reincarnate (without the ability to do it again)

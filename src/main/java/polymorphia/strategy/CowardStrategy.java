@@ -1,38 +1,39 @@
 package polymorphia.strategy;
 
+import polymorphia.artifacts.Cloak;
 import polymorphia.artifacts.Food;
 import polymorphia.artifacts.TreasureMap;
 import polymorphia.characters.Character;
+import polymorphia.commands.ICommand;
 import polymorphia.maze.IRoom;
 
 import java.util.Optional;
-import java.util.Set;
 
 public class CowardStrategy extends Strategy {
 
     @Override
-    public void doAction(Character myself, IRoom room) {
+    public ICommand getAction(Character myself, IRoom room) {
+        // hiding beats running, so grab a cloak before anything else
+        Optional<Cloak> cloak = getArtifact(room, Cloak.class);
+        if (cloak.isPresent()) {
+            return commandFactory.newDonCommand(myself, room, cloak.get());
+        }
         if (!room.getLivingCreatures().isEmpty()) {
-            move(myself, room);
-            return;
+            return moveCommand(myself, room);       // run away first, always
         }
         Optional<TreasureMap> treasureMap = getArtifact(room, TreasureMap.class);
         if (treasureMap.isPresent()) {
-            TreasureMap actualMap = treasureMap.get();
-            myself.take(room, actualMap);
-            return;
+            return commandFactory.newTakeCommand(myself, room, treasureMap.get());
         }
         Optional<Food> food = getArtifact(room, Food.class);
         if (food.isPresent()) {
-            myself.eat(room, food.get());
-            return;
+            return commandFactory.newEatCommand(myself, room, food.get());
         }
-        move(myself, room);
+        return moveCommand(myself, room);
     }
 
     @Override
     public boolean isCoward() {
         return true;
     }
-
 }

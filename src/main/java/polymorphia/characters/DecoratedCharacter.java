@@ -57,12 +57,12 @@ public abstract class DecoratedCharacter extends Character {
     }
 
     @Override
-    protected double getMovingCost() {
+    public double getMovingCost() {
         return artifact.getMovingCost() + myself.getMovingCost();
     }
 
     @Override
-    protected void loseHealth(double healthToLose) {
+    public void loseHealth(double healthToLose) {
         myself.loseHealth(healthToLose);
     }
 

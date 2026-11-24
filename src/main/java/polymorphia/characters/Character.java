@@ -7,6 +7,7 @@ import polymorphia.RandomDie;
 import polymorphia.artifacts.Artifact;
 import polymorphia.artifacts.Food;
 import polymorphia.maze.IMutableRoom;
+import polymorphia.commands.ICommand;
 import polymorphia.maze.IRoom;
 import polymorphia.observers.EventBus;
 import polymorphia.strategy.IStrategy;
@@ -57,7 +58,7 @@ abstract public class Character {
         return String.format("%s(health: %.2f, %s)", getName(), getHealth(), getDie());
     }
 
-    protected void loseHealth(double healthPoints) {
+    public void loseHealth(double healthPoints) {
         if (health <= 0) {
             return;
         }     // already dead, probably called for mandatory health loss for having a fight
@@ -173,18 +174,17 @@ abstract public class Character {
         return getDie().roll();
     }
 
-    public final void doAction(IRoom currentLocation) {
-        if (isAlive()) {
-            doLivingAction(currentLocation);
-        }
+    /** Ask my strategy what I want to do. Whoever asked is responsible for running it. */
+    public ICommand getAction(IRoom currentLocation) {
+        return getStrategy().getAction(this, currentLocation);
+    }
+
+    /** Called once per turn by the command wrapper, however the turn went. */
+    public void turnTaken() {
         loseHealth(HEALTH_LOST_IN_AGING_EACH_TURN);
     }
 
-    private void doLivingAction(IRoom currentLocation) {
-        this.getStrategy().doAction(this, currentLocation);
-    }
-
-    protected double getMovingCost() {
+    public double getMovingCost() {
         return HEALTH_LOST_IN_MOVING_ROOMS;
     }
 

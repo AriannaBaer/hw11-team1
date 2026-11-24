@@ -71,7 +71,15 @@ public class GameConfigurator {
     }
 
     private void createAndStartGame(boolean addGraphicalView) {
-        // TODO: Implement me
+        Maze maze = mazeBuilder.build();
+        ObservablePolymorphia game = new ObservablePolymorphia(maze);
+
+        if (addGraphicalView) {
+            game.attach(createMazeObserver(game));
+        }
+
+        game.play();
+        System.out.println(maze);
     }
 
     private void buildMazeFromArguments(CommandLine cmdLine) throws ParseException {
@@ -165,7 +173,9 @@ public class GameConfigurator {
         mazeBuilder.addArtifacts(artifactFactory.createWeapons(numWeapons));
 
         if (cmdLine.hasOption("y")) {
-            // TODO: Finish this code
+            // one quoted argument, names separated by commas (spaces work too)
+            String[] humanNames = cmdLine.getOptionValue("y").trim().split("\\s*[,\\s]\\s*");
+            mazeBuilder.addCharacters(characterFactory.createHumans(humanNames));
         }
     }
 

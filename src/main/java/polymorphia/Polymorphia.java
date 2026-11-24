@@ -2,6 +2,7 @@ package polymorphia;
 
 import org.slf4j.Logger;
 import polymorphia.characters.Character;
+import polymorphia.commands.ICommand;
 import polymorphia.maze.CharacterLocationPair;
 import polymorphia.maze.IRoom;
 import polymorphia.maze.Maze;
@@ -55,7 +56,10 @@ public class Polymorphia {
         for (CharacterLocationPair pair : maze) {
             Character character = pair.character();
             IRoom room = pair.room();
-            character.doAction(room);
+            if (character.isAlive()) {
+                ICommand command = character.getAction(room);
+                command.executeCommand();
+            }
         }
     }
 

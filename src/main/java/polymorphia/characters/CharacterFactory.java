@@ -5,6 +5,7 @@ import polymorphia.RandomDie;
 import polymorphia.artifacts.Armor;
 import polymorphia.artifacts.Artifact;
 import polymorphia.artifacts.Cloak;
+import polymorphia.strategy.HumanStrategy;
 import polymorphia.strategy.IStrategy;
 import polymorphia.strategy.StrategyFactory;
 

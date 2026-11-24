@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
 group = 'org.example'
@@ -48,6 +49,24 @@ test {
 
     testLogging {
         events "passed", "skipped", "failed"
+    }
+
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    // needs to be new enough to read Java 25 bytecode; bump this if the build
+    // complains about an unsupported class file major version
+    toolVersion = "0.8.13"
+}
+
+// Coverage numbers we can read without depending on an IDE setting.
+// ./gradlew test  ->  build/reports/jacoco/test/html/index.html
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
     }
 }
 
